@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HRGA Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:linear-gradient(135deg,#eef4ff,#f8fbff,#e9f2ff);
+    min-height:100vh;
+    color:#1e293b;
+    display:flex;
+    flex-direction:column;
+}
+
+.container{width:100%;max-width:1200px;margin:0 auto;padding:40px 20px;flex:1;}
+
+/* HEADER */
+.header{
+    background:rgba(255,255,255,0.85);
+    border-radius:22px;
+    padding:28px 30px;
+    margin-bottom:35px;
+    border:1px solid #e2e8f0;
+    box-shadow:0 10px 30px rgba(0,0,0,0.05);
+}
+.header-top{display:grid;grid-template-columns:110px 1fr 110px;align-items:center;gap:18px;}
+.logo{display:flex;justify-content:center;align-items:center;}
+.logo img{max-width:84px;max-height:84px;width:auto;height:auto;object-fit:contain;}
+.header-text{text-align:center;}
+.header-text h1{font-size:32px;font-weight:700;margin-bottom:8px;color:#0f172a;}
+.header-text p{font-size:15px;color:#64748b;line-height:1.7;max-width:650px;margin:0 auto;}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;}
+
+/* CARD */
+.card-link{text-decoration:none;color:inherit;}
+.card{
+    background:white;
+    border-radius:18px;
+    padding:24px;
+    border:1px solid #e2e8f0;
+    box-shadow:0 10px 25px rgba(0,0,0,0.05);
+    transition:0.25s;
+    height:100%;
+}
+.card:hover{transform:translateY(-5px);box-shadow:0 18px 35px rgba(0,0,0,0.08);}
+.icon{
+    width:52px;height:52px;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;color:white;margin-bottom:16px;
+}
+.blue{background:#3b82f6;}.green{background:#10b981;}.orange{background:#f59e0b;}
+.purple{background:#8b5cf6;}.red{background:#ef4444;}.teal{background:#14b8a6;}
+.card h3{font-size:17px;font-weight:600;margin-bottom:8px;}
+.card p{font-size:14px;color:#64748b;line-height:1.6;}
+
+/* FOOTER */
+.footer{
+    text-align:center;font-size:13px;color:#64748b;
+    padding:20px 10px;border-top:1px solid #e2e8f0;background:white;
+}
+
+/* SETTINGS BUTTON */
+.btn-settings{
+    position:fixed;bottom:24px;right:24px;
+    width:48px;height:48px;border-radius:50%;
+    background:#1e293b;color:white;border:none;
+    font-size:20px;cursor:pointer;
+    box-shadow:0 4px 14px rgba(0,0,0,0.25);
+    display:flex;align-items:center;justify-content:center;
+    transition:background 0.2s,transform 0.2s;
+    z-index:100;
+}
+.btn-settings:hover{background:#0f172a;transform:scale(1.08);}
+
+/* OVERLAY */
+.overlay{
+    display:none;position:fixed;inset:0;
+    background:rgba(0,0,0,0.45);z-index:200;
+    align-items:center;justify-content:center;
+}
+.overlay.show{display:flex;}
+
+/* PASSWORD MODAL */
+.modal-box{
+    background:white;border-radius:20px;
+    padding:36px 32px;width:100%;max-width:380px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.2);
+    text-align:center;
+}
+.modal-box h2{font-size:20px;font-weight:700;margin-bottom:6px;color:#0f172a;}
+.modal-box p{font-size:14px;color:#64748b;margin-bottom:22px;}
+.modal-box input{
+    width:100%;padding:11px 14px;border:1px solid #e2e8f0;
+    border-radius:10px;font-size:15px;outline:none;
+    font-family:inherit;margin-bottom:10px;
+    transition:border 0.2s;
+}
+.modal-box input:focus{border-color:#3b82f6;}
+.modal-box .err{font-size:13px;color:#ef4444;margin-bottom:10px;min-height:18px;}
+.btn-primary{
+    width:100%;padding:11px;background:#3b82f6;color:white;
+    border:none;border-radius:10px;font-size:15px;font-weight:600;
+    cursor:pointer;font-family:inherit;transition:background 0.2s;
+}
+.btn-primary:hover{background:#2563eb;}
+.btn-cancel{
+    margin-top:10px;background:none;border:none;color:#64748b;
+    font-size:14px;cursor:pointer;font-family:inherit;
+}
+.btn-cancel:hover{color:#1e293b;}
+
+/* SETTINGS PANEL */
+.settings-panel{
+    background:white;border-radius:20px;
+    width:100%;max-width:720px;max-height:88vh;
+    display:flex;flex-direction:column;
+    box-shadow:0 20px 60px rgba(0,0,0,0.2);
+    overflow:hidden;
+}
+.settings-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px 26px;border-bottom:1px solid #e2e8f0;
+    flex-shrink:0;
+}
+.settings-head h2{font-size:18px;font-weight:700;color:#0f172a;}
+.btn-close-panel{
+    background:none;border:none;font-size:22px;
+    color:#64748b;cursor:pointer;line-height:1;
+}
+.btn-close-panel:hover{color:#0f172a;}
+.settings-body{overflow-y:auto;padding:20px 26px;flex:1;}
+
+/* PORTAL LIST */
+.portal-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.portal-item{
+    display:flex;align-items:center;gap:12px;
+    background:#f8fafc;border:1px solid #e2e8f0;
+    border-radius:12px;padding:12px 14px;
+}
+.portal-item.inactive{opacity:0.5;}
+.pi-icon{
+    width:38px;height:38px;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:17px;color:white;flex-shrink:0;
+}
+.pi-info{flex:1;min-width:0;}
+.pi-info strong{font-size:14px;font-weight:600;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pi-info span{font-size:12px;color:#64748b;}
+.pi-actions{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.btn-icon{
+    width:32px;height:32px;border-radius:8px;border:1px solid #e2e8f0;
+    background:white;cursor:pointer;font-size:15px;
+    display:flex;align-items:center;justify-content:center;
+    transition:background 0.15s,border-color 0.15s;
+}
+.btn-icon:hover{background:#f1f5f9;}
+.btn-icon.active-toggle{color:#10b981;}
+.btn-icon.inactive-toggle{color:#94a3b8;}
+.btn-icon.edit{color:#3b82f6;}
+.btn-icon.del{color:#ef4444;}
+
+/* FORM */
+.form-section{
+    background:#f8fafc;border:1px solid #e2e8f0;
+    border-radius:14px;padding:18px 20px;margin-bottom:16px;
+}
+.form-section h3{font-size:15px;font-weight:600;margin-bottom:14px;color:#0f172a;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.form-row.full{grid-template-columns:1fr;}
+.form-group{display:flex;flex-direction:column;gap:5px;}
+.form-group label{font-size:13px;font-weight:500;color:#374151;}
+.form-group input,.form-group select{
+    padding:9px 12px;border:1px solid #e2e8f0;
+    border-radius:9px;font-size:14px;font-family:inherit;
+    outline:none;background:white;
+    transition:border 0.2s;
+}
+.form-group input:focus,.form-group select:focus{border-color:#3b82f6;}
+.form-actions{display:flex;gap:10px;margin-top:4px;}
+.btn-save{
+    padding:9px 20px;background:#3b82f6;color:white;
+    border:none;border-radius:9px;font-size:14px;font-weight:600;
+    cursor:pointer;font-family:inherit;transition:background 0.2s;
+}
+.btn-save:hover{background:#2563eb;}
+.btn-reset{
+    padding:9px 16px;background:white;color:#64748b;
+    border:1px solid #e2e8f0;border-radius:9px;font-size:14px;
+    cursor:pointer;font-family:inherit;transition:background 0.2s;
+}
+.btn-reset:hover{background:#f1f5f9;}
+.btn-add-new{
+    display:flex;align-items:center;gap:8px;
+    padding:10px 18px;background:#10b981;color:white;
+    border:none;border-radius:10px;font-size:14px;font-weight:600;
+    cursor:pointer;font-family:inherit;margin-bottom:16px;
+    transition:background 0.2s;
+}
+.btn-add-new:hover{background:#059669;}
+
+/* TOAST */
+.toast{
+    position:fixed;bottom:80px;right:24px;
+    background:#1e293b;color:white;
+    padding:12px 20px;border-radius:12px;
+    font-size:14px;font-weight:500;
+    z-index:999;opacity:0;transform:translateY(10px);
+    transition:opacity 0.3s,transform 0.3s;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateY(0);}
+
+/* EMPTY */
+.empty{text-align:center;padding:40px 20px;color:#94a3b8;font-size:15px;}
+
+/* RESPONSIVE */
+@media(max-width:992px){
+    .header-top{grid-template-columns:90px 1fr 90px;gap:14px;}
+    .logo img{max-width:72px;max-height:72px;}
+    .header-text h1{font-size:28px;}
+}
+@media(max-width:768px){
+    .container{padding:20px 14px 30px;}
+    .header{padding:22px 16px;border-radius:18px;}
+    .header-top{
+        grid-template-columns:1fr 1fr;
+        grid-template-areas:"logo-left logo-right" "text text";gap:14px 10px;
+    }
+    .logo-left{grid-area:logo-left;justify-content:flex-start;}
+    .logo-right{grid-area:logo-right;justify-content:flex-end;}
+    .header-text{grid-area:text;text-align:center;margin-top:4px;}
+    .logo img{max-width:64px;max-height:64px;}
+    .header-text h1{font-size:24px;margin-bottom:8px;line-height:1.2;}
+    .header-text p{font-size:13px;line-height:1.6;max-width:100%;}
+    .grid{grid-template-columns:1fr;gap:16px;}
+    .card{padding:20px;}
+    .form-row{grid-template-columns:1fr;}
+    .settings-panel{max-height:95vh;border-radius:16px;}
+    .settings-body{padding:16px 18px;}
+    .settings-head{padding:18px 20px;}
+}
+@media(max-width:420px){
+    .logo img{max-width:58px;max-height:58px;}
+    .header-text h1{font-size:22px;}
+    .header-text p{font-size:12.5px;}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-top">
+            <div class="logo logo-left">
+                <img src="MBM.png" alt="Logo MBM">
+            </div>
+            <div class="header-text">
+                <h1>HRGA Portal</h1>
+                <p>Portal aplikasi internal HR & General Affair untuk mengakses sistem monitoring,
+                mess management, asset, housekeeping, kepegawaian dan kebutuhan operasional lainnya.</p>
+            </div>
+            <div class="logo logo-right">
+                <img src="SCM.jpeg" alt="Logo SCM">
+            </div>
+        </div>
+    </div>
+
+    <!-- GRID APPS -->
+    <div class="grid" id="portalGrid">
+        <div class="empty">Memuat portal...</div>
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+    © 2026 HRGA Portal • Internal System
+</footer>
+
+<!-- SETTINGS BUTTON -->
+<button class="btn-settings" onclick="openPasswordModal()" title="Settings">
+    <i class="bi bi-gear-fill"></i>
+</button>
+
+<!-- PASSWORD OVERLAY -->
+<div class="overlay" id="overlayPwd">
+    <div class="modal-box">
+        <h2><i class="bi bi-shield-lock"></i> Settings</h2>
+        <p>Masukkan password untuk membuka pengaturan portal.</p>
+        <input type="password" id="pwdInput" placeholder="Password" onkeydown="if(event.key==='Enter')checkPwd()">
+        <div class="err" id="pwdErr"></div>
+        <button class="btn-primary" onclick="checkPwd()">Masuk</button>
+        <br>
+        <button class="btn-cancel" onclick="closePasswordModal()">Batal</button>
+    </div>
+</div>
+
+<!-- SETTINGS OVERLAY -->
+<div class="overlay" id="overlaySettings">
+    <div class="settings-panel">
+        <div class="settings-head">
+            <h2><i class="bi bi-sliders"></i> Pengaturan Portal</h2>
+            <button class="btn-close-panel" onclick="closeSettings()" title="Tutup">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <div class="settings-body">
+
+            <button class="btn-add-new" onclick="showForm()">
+                <i class="bi bi-plus-circle"></i> Tambah Portal Baru
+            </button>
+
+            <!-- FORM ADD / EDIT -->
+            <div class="form-section" id="formSection" style="display:none;">
+                <h3 id="formTitle">Tambah Portal</h3>
+                <input type="hidden" id="fId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Judul</label>
+                        <input type="text" id="fTitle" placeholder="Nama portal">
+                    </div>
+                    <div class="form-group">
+                        <label>URL / Link</label>
+                        <input type="text" id="fUrl" placeholder="https://...">
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>Deskripsi</label>
+                        <input type="text" id="fDesc" placeholder="Deskripsi singkat">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Icon (Bootstrap Icons)</label>
+                        <select id="fIcon">
+                            <option value="bi-people-fill">👥 People / SDM</option>
+                            <option value="bi-building">🏢 Building / Gedung</option>
+                            <option value="bi-box-seam">📦 Box / Asset</option>
+                            <option value="bi-check2-square">✅ Checklist</option>
+                            <option value="bi-file-earmark-text">📄 Dokumen</option>
+                            <option value="bi-bar-chart-line">📊 Chart / Grafik</option>
+                            <option value="bi-house-fill">🏠 House</option>
+                            <option value="bi-tools">🔧 Tools</option>
+                            <option value="bi-truck">🚛 Kendaraan</option>
+                            <option value="bi-clipboard-data">📋 Data / Laporan</option>
+                            <option value="bi-calendar-check">📅 Kalender</option>
+                            <option value="bi-person-badge">🪪 Identitas</option>
+                            <option value="bi-shield-check">🛡️ Keamanan</option>
+                            <option value="bi-cash-stack">💰 Keuangan</option>
+                            <option value="bi-graph-up">📈 Statistik</option>
+                            <option value="bi-printer">🖨️ Printer</option>
+                            <option value="bi-envelope">✉️ Email</option>
+                            <option value="bi-telephone">📞 Telepon</option>
+                            <option value="bi-gear-fill">⚙️ Pengaturan</option>
+                            <option value="bi-cloud-arrow-up">☁️ Upload</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Warna Icon</label>
+                        <select id="fColor">
+                            <option value="blue">🔵 Biru</option>
+                            <option value="green">🟢 Hijau</option>
+                            <option value="orange">🟠 Oranye</option>
+                            <option value="purple">🟣 Ungu</option>
+                            <option value="red">🔴 Merah</option>
+                            <option value="teal">🩵 Teal</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-save" onclick="savePortal()">
+                        <i class="bi bi-floppy"></i> Simpan
+                    </button>
+                    <button class="btn-reset" onclick="cancelForm()">Batal</button>
+                </div>
+            </div>
+
+            <!-- PORTAL LIST -->
+            <div class="portal-list" id="portalList"></div>
+
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const PASSWORD = 'TMSBISA';
+let portals = [];
+let editingId = null;
+
+// ── LOAD ────────────────────────────────────────────
+async function loadPortals() {
+    try {
+        const res = await fetch('portals.json?_=' + Date.now());
+        portals = await res.json();
+    } catch {
+        portals = [];
+    }
+    renderGrid();
+}
+
+// ── RENDER GRID (portal page) ────────────────────────
+function renderGrid() {
+    const grid = document.getElementById('portalGrid');
+    const active = portals.filter(p => p.active);
+    if (!active.length) {
+        grid.innerHTML = '<div class="empty">Belum ada portal yang aktif.</div>';
+        return;
+    }
+    grid.innerHTML = active.map(p => `
+        <a href="${escHtml(p.url)}" class="card-link">
+            <div class="card">
+                <div class="icon ${escHtml(p.color)}"><i class="bi ${escHtml(p.icon)}"></i></div>
+                <h3>${escHtml(p.title)}</h3>
+                <p>${escHtml(p.desc)}</p>
+            </div>
+        </a>
+    `).join('');
+}
+
+// ── RENDER SETTINGS LIST ─────────────────────────────
+function renderList() {
+    const list = document.getElementById('portalList');
+    if (!portals.length) {
+        list.innerHTML = '<div class="empty">Belum ada portal. Klik "Tambah Portal Baru".</div>';
+        return;
+    }
+    list.innerHTML = portals.map(p => `
+        <div class="portal-item${p.active ? '' : ' inactive'}" id="item-${p.id}">
+            <div class="pi-icon ${escHtml(p.color)}">
+                <i class="bi ${escHtml(p.icon)}"></i>
+            </div>
+            <div class="pi-info">
+                <strong>${escHtml(p.title)}</strong>
+                <span>${p.active ? 'Aktif' : 'Nonaktif'} • ${escHtml(p.url)}</span>
+            </div>
+            <div class="pi-actions">
+                <button class="btn-icon ${p.active ? 'active-toggle' : 'inactive-toggle'}"
+                    onclick="togglePortal(${p.id})"
+                    title="${p.active ? 'Nonaktifkan' : 'Aktifkan'}">
+                    <i class="bi ${p.active ? 'bi-eye-fill' : 'bi-eye-slash-fill'}"></i>
+                </button>
+                <button class="btn-icon edit" onclick="editPortal(${p.id})" title="Edit">
+                    <i class="bi bi-pencil-fill"></i>
+                </button>
+                <button class="btn-icon del" onclick="deletePortal(${p.id})" title="Hapus">
+                    <i class="bi bi-trash3-fill"></i>
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ── PASSWORD ─────────────────────────────────────────
+function openPasswordModal() {
+    document.getElementById('pwdInput').value = '';
+    document.getElementById('pwdErr').textContent = '';
+    document.getElementById('overlayPwd').classList.add('show');
+    setTimeout(() => document.getElementById('pwdInput').focus(), 100);
+}
+function closePasswordModal() {
+    document.getElementById('overlayPwd').classList.remove('show');
+}
+function checkPwd() {
+    const val = document.getElementById('pwdInput').value;
+    if (val === PASSWORD) {
+        closePasswordModal();
+        openSettings();
+    } else {
+        document.getElementById('pwdErr').textContent = 'Password salah. Coba lagi.';
+        document.getElementById('pwdInput').select();
+    }
+}
+
+// ── SETTINGS PANEL ───────────────────────────────────
+function openSettings() {
+    cancelForm();
+    renderList();
+    document.getElementById('overlaySettings').classList.add('show');
+}
+function closeSettings() {
+    document.getElementById('overlaySettings').classList.remove('show');
+    cancelForm();
+}
+
+// ── FORM ─────────────────────────────────────────────
+function showForm(portal) {
+    editingId = portal ? portal.id : null;
+    document.getElementById('formTitle').textContent = portal ? 'Edit Portal' : 'Tambah Portal';
+    document.getElementById('fId').value = portal ? portal.id : '';
+    document.getElementById('fTitle').value = portal ? portal.title : '';
+    document.getElementById('fUrl').value = portal ? portal.url : '';
+    document.getElementById('fDesc').value = portal ? portal.desc : '';
+    document.getElementById('fIcon').value = portal ? portal.icon : 'bi-people-fill';
+    document.getElementById('fColor').value = portal ? portal.color : 'blue';
+    document.getElementById('formSection').style.display = 'block';
+    document.getElementById('fTitle').focus();
+}
+function cancelForm() {
+    editingId = null;
+    document.getElementById('formSection').style.display = 'none';
+    document.getElementById('fTitle').value = '';
+    document.getElementById('fUrl').value = '';
+    document.getElementById('fDesc').value = '';
+}
+function editPortal(id) {
+    const p = portals.find(x => x.id === id);
+    if (p) showForm(p);
+}
+
+// ── SAVE ─────────────────────────────────────────────
+async function savePortal() {
+    const title = document.getElementById('fTitle').value.trim();
+    const url   = document.getElementById('fUrl').value.trim();
+    const desc  = document.getElementById('fDesc').value.trim();
+    const icon  = document.getElementById('fIcon').value;
+    const color = document.getElementById('fColor').value;
+
+    if (!title) { showToast('Judul tidak boleh kosong.'); return; }
+    if (!url)   { showToast('URL tidak boleh kosong.'); return; }
+
+    if (editingId !== null) {
+        const idx = portals.findIndex(p => p.id === editingId);
+        if (idx !== -1) {
+            portals[idx] = { ...portals[idx], title, url, desc, icon, color };
+        }
+    } else {
+        const newId = portals.length ? Math.max(...portals.map(p => p.id)) + 1 : 1;
+        portals.push({ id: newId, title, url, desc, icon, color, active: true });
+    }
+
+    const ok = await persist();
+    if (ok) {
+        renderGrid();
+        renderList();
+        cancelForm();
+        showToast(editingId !== null ? 'Portal diperbarui.' : 'Portal ditambahkan.');
+        editingId = null;
+    }
+}
+
+// ── TOGGLE ACTIVE ─────────────────────────────────────
+async function togglePortal(id) {
+    const p = portals.find(x => x.id === id);
+    if (!p) return;
+    p.active = !p.active;
+    const ok = await persist();
+    if (ok) {
+        renderGrid();
+        renderList();
+        showToast(p.active ? `"${p.title}" diaktifkan.` : `"${p.title}" dinonaktifkan.`);
+    }
+}
+
+// ── DELETE ────────────────────────────────────────────
+async function deletePortal(id) {
+    const p = portals.find(x => x.id === id);
+    if (!p) return;
+    if (!confirm(`Hapus portal "${p.title}"?`)) return;
+    portals = portals.filter(x => x.id !== id);
+    const ok = await persist();
+    if (ok) {
+        renderGrid();
+        renderList();
+        showToast(`"${p.title}" dihapus.`);
+    }
+}
+
+// ── PERSIST (save to server) ──────────────────────────
+async function persist() {
+    try {
+        const res = await fetch('api.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(portals)
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error();
+        return true;
+    } catch {
+        showToast('Gagal menyimpan data. Periksa koneksi server.');
+        return false;
+    }
+}
+
+// ── TOAST ─────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── UTILS ─────────────────────────────────────────────
+function escHtml(str) {
+    return String(str ?? '')
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// close overlay on backdrop click
+document.getElementById('overlayPwd').addEventListener('click', function(e){
+    if (e.target === this) closePasswordModal();
+});
+document.getElementById('overlaySettings').addEventListener('click', function(e){
+    if (e.target === this) closeSettings();
+});
+
+// INIT
+loadPortals();
+</script>
+</body>
+</html>

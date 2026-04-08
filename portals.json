@@ -1,0 +1,56 @@
+[
+    {
+        "id": 1,
+        "title": "POB Monitoring",
+        "desc": "Monitoring People On Board dan data manpower.",
+        "url": "http://pob.scmtms.online",
+        "icon": "bi-people-fill",
+        "color": "blue",
+        "active": true
+    },
+    {
+        "id": 2,
+        "title": "Mess Management",
+        "desc": "Pengelolaan kamar, penghuni dan fasilitas mess.",
+        "url": "#",
+        "icon": "bi-building",
+        "color": "green",
+        "active": true
+    },
+    {
+        "id": 3,
+        "title": "Asset Inventory",
+        "desc": "Data asset GA seperti bed, locker dan dispenser.",
+        "url": "#",
+        "icon": "bi-box-seam",
+        "color": "orange",
+        "active": true
+    },
+    {
+        "id": 4,
+        "title": "Housekeeping",
+        "desc": "Checklist pekerjaan housekeeping dan inspeksi kamar.",
+        "url": "#",
+        "icon": "bi-check2-square",
+        "color": "purple",
+        "active": true
+    },
+    {
+        "id": 5,
+        "title": "PR / PO Request",
+        "desc": "Pengajuan kebutuhan operasional melalui sistem request.",
+        "url": "#",
+        "icon": "bi-file-earmark-text",
+        "color": "red",
+        "active": true
+    },
+    {
+        "id": 6,
+        "title": "GA Dashboard",
+        "desc": "Dashboard analisis dan monitoring operasional GA.",
+        "url": "#",
+        "icon": "bi-bar-chart-line",
+        "color": "teal",
+        "active": true
+    }
+]
